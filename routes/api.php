@@ -25,6 +25,7 @@ use App\Controllers\FavoritoController;
 use App\Controllers\HomeController;
 use App\Controllers\BloqueController;
 use App\Controllers\DashboardController;
+use App\Controllers\VendedorDashboardController;
 use App\Controllers\NotificacionController;
 use App\Controllers\EmpresaEnvioController;
 use App\Controllers\RepartidorController;
@@ -58,6 +59,9 @@ $router->post('/api/ventas',           [VentaController::class, 'crear'],      t
 $router->get('/api/ventas',            [VentaController::class, 'listar'],     true);
 $router->get('/api/ventas/ticket',     [VentaController::class, 'ticket'],     true);
 $router->post('/api/ventas/anular',    [VentaController::class, 'anular'],     true);
+
+// --- Dashboard del vendedor (staff): ventas, compras de clientes, cajas y ranking ---
+$router->get('/api/vendedor/dashboard', [VendedorDashboardController::class, 'resumen'], true);
 
 // --- Panel admin: dashboard + ABM de tablas maestras (solo admin) ---
 $router->get('/api/admin/dashboard', [DashboardController::class, 'resumen'], true);

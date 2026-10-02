@@ -19,6 +19,7 @@
                 <span class="brand-word">Britech <span>Admin</span></span></div>
             <nav class="side-nav" id="nav">
                 <button data-ent="inicio"    class="nav-item" data-admin>Inicio</button>
+                <button data-ent="vendedor"  class="nav-item">Mi panel</button>
                 <button data-ent="pedidos"   class="nav-item">Pedidos</button>
                 <button data-ent="reclamos"  class="nav-item">Reclamos</button>
                 <button data-ent="cajas"     class="nav-item" data-admin>Cajas</button>
@@ -103,6 +104,28 @@
                 <div class="dash-grid">
                     <div class="dash-panel" id="dash-stock"></div>
                     <div class="dash-panel" id="dash-sinmov"></div>
+                </div>
+            </section>
+
+            <!-- Vista: dashboard del vendedor (ventas, compras de clientes, cajas, ranking) -->
+            <section id="vista-vendedor" class="oculto">
+                <header class="content-top">
+                    <div>
+                        <h1>Mi panel</h1>
+                        <p class="sub">Cuánto se vende, cuánto compran los clientes y cómo están las cajas.</p>
+                    </div>
+                    <div class="periodo-toggle" id="vend-periodo">
+                        <button data-p="semana" class="activo">Semana</button>
+                        <button data-p="mes">Mes</button>
+                        <button data-p="ano">Año</button>
+                    </div>
+                </header>
+                <div class="dash-grid">
+                    <div class="dash-panel dash-ancho" id="vend-ventas"></div>
+                    <div class="dash-panel dash-ancho" id="vend-compras"></div>
+                    <div class="dash-panel dash-ancho" id="vend-cajas"></div>
+                    <div class="dash-panel" id="vend-ranking"></div>
+                    <div class="dash-panel" id="vend-clientes"></div>
                 </div>
             </section>
 
@@ -301,5 +324,6 @@
     <script src="/assets/js/admin-compras.js"></script>
     <script src="/assets/js/admin-cajas.js"></script>
     <script src="/assets/js/admin-reclamos.js"></script>
+    <script src="/assets/js/admin-vendedor.js"></script>
 </body>
 </html>
