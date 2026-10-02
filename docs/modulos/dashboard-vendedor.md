@@ -12,6 +12,9 @@ cómo venía su trabajo. Necesita un tablero **propio e individual**: que le mue
 
 ## Parte 1 — Cómo se usa (explicación sencilla)
 
+**Cómo se entra:** desde el **POS** con el botón **📊 Mi panel** (barra de arriba, lo ven
+todos los roles), o desde el menú del panel. Para volver al POS: botón **🧾 Ir al POS**.
+
 Al iniciar sesión como **vendedor**, el panel abre directamente en **Mi panel**
 (el título dice tu nombre: *Mi panel · Juan*). Cada vendedor ve **solo sus números**.
 (El admin también tiene *Mi panel* en el menú y ve los suyos, por ejemplo si vende en el POS.)
@@ -66,7 +69,8 @@ Respeta la misma arquitectura del resto del proyecto:
 | Repository | `app/Repositories/VendedorDashboardRepository.php` | Consultas SQL (lectura), todas filtradas por `usuario_id` |
 | Vista | `public/admin.html` | Botón **Mi panel** en el menú + sección `#vista-vendedor` |
 | Lógica front | `public/assets/js/admin-vendedor.js` | Pide los datos y dibuja tarjetas, gráficos y listados |
-| Navegación | `public/assets/js/admin.js` | `seleccionar('vendedor')`; el vendedor aterriza ahí al entrar |
+| Navegación | `public/assets/js/admin.js` | `seleccionar('vendedor')`; el vendedor aterriza ahí al entrar; con `#vendedor` también el admin |
+| POS | `public/pos.html` | Botón **📊 Mi panel** → `/admin.html#vendedor` (todos los roles) |
 | Estilos | `public/assets/css/admin.css` | Bloque `Dashboard del vendedor` (reusa `.dash-panel`, `.barras`, `.hbar-*`, `.card`) |
 
 ### Individual: cómo se garantiza
@@ -78,7 +82,7 @@ Cada consulta lleva `WHERE usuario_id = ?`.
 
 `GET /api/vendedor/dashboard?periodo=dia|semana|mes|ano` (si el período no es válido, usa `semana`).
 
-Acceso: **staff** (`Session::esStaff()` → vendedor o admin). Sin sesión → 401; cliente → 403.
+Acceso: **staff** (vendedor o admin). Sin sesión de staff (incluye clientes de la tienda) el Router responde 401; además el controller verifica `Session::esStaff()` (403) como segunda barrera.
 
 ```json
 {
