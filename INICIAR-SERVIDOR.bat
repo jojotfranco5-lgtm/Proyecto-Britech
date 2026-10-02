@@ -75,10 +75,21 @@ echo   [ERROR] MySQL no arranco. Abri Laragon y toca "Start All".
 pause & exit /b 1
 :mysql_ok
 
-REM ---------- 4. Base de datos (solo si no existe) ----------
+REM ---------- 4. Base de datos (la que diga DB_NAME en el .env) ----------
 set "MYSQL="%MYSQLBIN%\mysql.exe" -u root --default-character-set=utf8mb4"
-%MYSQL% -e "USE britech_v2" >nul 2>&1
-if errorlevel 1 (
+set "DBNAME=britech_v2"
+for /f "usebackq tokens=1,* delims==" %%A in (".env") do if /i "%%A"=="DB_NAME" set "DBNAME=%%B"
+echo   Base de datos: %DBNAME%
+%MYSQL% -e "USE %DBNAME%" >nul 2>&1
+if not errorlevel 1 goto base_existe
+REM Los schemas del repo crean SIEMPRE britech_v2: si el .env apunta a otra base
+REM (ej. un volcado importado a mano), no se puede crear sola.
+if /i not "%DBNAME%"=="britech_v2" (
+    echo   [ERROR] La base %DBNAME% ^(DB_NAME del .env^) no existe.
+    echo   Importa tu volcado .sql en esa base, o pone DB_NAME=britech_v2 para crearla desde los schemas.
+    pause & exit /b 1
+)
+(
     echo   Creando la base britech_v2 ^(solo la primera vez^)...
     %MYSQL% < "database\schema_ventas.sql" || goto error_sql
     REM Mismo orden que el README (las FK dependen de el).
@@ -91,13 +102,14 @@ if errorlevel 1 (
     echo   Base lista. Admin: admin@britech.local / admin1234
 )
 
+:base_existe
 REM La base existe pero quedo a medio importar (falta una tabla de los ultimos schemas)?
-%MYSQL% britech_v2 -e "SELECT 1 FROM reclamo_mensaje LIMIT 1" >nul 2>&1
+%MYSQL% %DBNAME% -e "SELECT 1 FROM reclamo_mensaje LIMIT 1" >nul 2>&1
 if errorlevel 1 (
     echo.
-    echo   [ERROR] La base britech_v2 existe pero esta INCOMPLETA ^(una importacion anterior fallo^).
+    echo   [ERROR] La base %DBNAME% existe pero esta INCOMPLETA ^(una importacion anterior fallo^).
     echo   Borrala y volve a abrir este archivo para que la cree de cero:
-    echo     "%MYSQLBIN%\mysql.exe" -u root -e "DROP DATABASE britech_v2"
+    echo     "%MYSQLBIN%\mysql.exe" -u root -e "DROP DATABASE %DBNAME%"
     pause & exit /b 1
 )
 
