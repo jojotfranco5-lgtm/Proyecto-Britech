@@ -1195,7 +1195,8 @@ let ES_ADMIN = true;   // el vendedor entra con acceso acotado (solo Pedidos)
     ES_ADMIN = sesion.usuario.rol === 'admin';
     wire();
     if (ES_ADMIN) {
-        seleccionar('inicio');
+        // Desde el POS ("📊 Mi panel") se llega con #vendedor → abre el dashboard propio.
+        seleccionar(location.hash === '#vendedor' ? 'vendedor' : 'inicio');
     } else {
         // Vendedor: su dashboard + lo operativo (pedidos + envíos). Oculta lo admin-only.
         document.querySelectorAll('[data-admin]').forEach((el) => el.classList.add('oculto'));
