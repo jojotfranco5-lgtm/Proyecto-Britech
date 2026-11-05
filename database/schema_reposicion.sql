@@ -12,7 +12,10 @@
 
 USE britech_v2;
 
+-- precio_anterior: precio "tachado" de las ofertas de la tienda (lo usa ProductoRepository).
+-- No lo creaba ningún otro schema, así que va acá, antes de costo.
 ALTER TABLE producto
+  ADD COLUMN precio_anterior DECIMAL(12,2) NULL AFTER min_mayorista,
   ADD COLUMN costo        DECIMAL(12,2) NULL AFTER precio_anterior,
   ADD COLUMN stock_minimo INT NOT NULL DEFAULT 0 AFTER costo;
 

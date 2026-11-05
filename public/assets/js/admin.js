@@ -406,10 +406,11 @@ async function seleccionar(ent) {
     const vistaBloques = $('vista-bloques'), vistaEmpleados = $('vista-empleados'),
           vistaTablas = $('vista-tablas'), vistaAjustes = $('vista-ajustes'), vistaRepartos = $('vista-repartos'),
           vistaReposicion = $('vista-reposicion'), vistaCompras = $('vista-compras'), vistaCajas = $('vista-cajas'),
-          vistaReclamos = $('vista-reclamos');
-    const ocultarTodo = () => [vistaAbm, vistaInicio, vistaBloques, vistaEmpleados, vistaTablas, vistaAjustes, vistaRepartos, vistaReposicion, vistaCompras, vistaCajas, vistaReclamos]
+          vistaReclamos = $('vista-reclamos'), vistaVendedor = $('vista-vendedor');
+    const ocultarTodo = () => [vistaAbm, vistaInicio, vistaBloques, vistaEmpleados, vistaTablas, vistaAjustes, vistaRepartos, vistaReposicion, vistaCompras, vistaCajas, vistaReclamos, vistaVendedor]
         .forEach((v) => v.classList.add('oculto'));
     if (ent === 'inicio')   { ocultarTodo(); vistaInicio.classList.remove('oculto');   return renderInicio(); }
+    if (ent === 'vendedor') { ocultarTodo(); vistaVendedor.classList.remove('oculto'); return renderVendedor(); }
     if (ent === 'tablas')   { ocultarTodo(); vistaTablas.classList.remove('oculto');   return renderTablas(); }
     if (ent === 'bloques')  { ocultarTodo(); vistaBloques.classList.remove('oculto');  return renderBloques(); }
     if (ent === 'empleados'){ ocultarTodo(); vistaEmpleados.classList.remove('oculto'); return renderEmpleados(); }
@@ -1241,11 +1242,12 @@ let ES_ADMIN = true;   // el vendedor entra con acceso acotado (solo Pedidos)
     ES_ADMIN = sesion.usuario.rol === 'admin';
     wire();
     if (ES_ADMIN) {
-        seleccionar('inicio');
+        // Desde el POS ("📊 Mi panel") se llega con #vendedor → abre el dashboard propio.
+        seleccionar(location.hash === '#vendedor' ? 'vendedor' : 'inicio');
     } else {
-        // Vendedor: solo lo operativo (pedidos + envíos). Oculta lo admin-only.
+        // Vendedor: su dashboard + lo operativo (pedidos + envíos). Oculta lo admin-only.
         document.querySelectorAll('[data-admin]').forEach((el) => el.classList.add('oculto'));
-        seleccionar('pedidos');
+        seleccionar('vendedor');
     }
     cargarNotificaciones();
     setInterval(cargarNotificaciones, 60000);   // refresca cada 60s
